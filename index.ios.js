@@ -7,25 +7,45 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  Button,
+  NativeEventEmitter,
+  NativeModules,
   StyleSheet,
   Text,
   View
 } from 'react-native';
 
+const tratarImagem = NativeModules.TratarImagem;
+const emissorTratarImagem = new NativeEventEmitter(tratarImagem);
+
+const inscricao = emissorTratarImagem.addListener(
+  'entregarImagem',
+  (data) => {
+    console.info('entregarImagem', data);
+  }
+)
+
 export default class NativeModule extends Component {
+  componentDidMount() {
+    tratarImagem.testarEvento();
+    tratarImagem.testarEventoComParametro('url.da.imagem');
+    tratarImagem.testarEventoComParametro('url.da.imagem.2');
+    tratarImagem.testarEventoComParametro('url.da.imagem.3');
+    tratarImagem.testarEventoComParametro('url.da.imagem.4');
+    tratarImagem.testarEventoComParametro('url.da.imagem.5');
+  }
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          Módulos Nativos
         </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
+        <Button
+          title="Iniciar Teste"
+          onPress={() => {
+            tratarImagem.testarEvento();
+          }}
+        />
       </View>
     );
   }
